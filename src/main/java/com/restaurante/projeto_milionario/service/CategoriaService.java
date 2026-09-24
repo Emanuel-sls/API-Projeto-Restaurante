@@ -51,6 +51,7 @@ public class CategoriaService {
 
         return categoriaRepository.save(categoriaExistente);
     }
+
     public Categoria BuscarCategoria(Long id) {
         Optional<Categoria> existente = categoriaRepository.findById(id);
         if (existente.isEmpty()) {

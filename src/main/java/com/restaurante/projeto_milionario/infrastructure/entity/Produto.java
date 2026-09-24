@@ -40,4 +40,7 @@ public class Produto {
     @JoinColumn(name="id_cate")
     @ManyToOne
     private Categoria categoria;
+
+    @Column(name = "imagem_url")
+    private String imagemUrlProduto;
 }

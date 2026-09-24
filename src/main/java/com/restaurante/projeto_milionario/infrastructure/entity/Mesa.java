@@ -1,6 +1,7 @@
 package com.restaurante.projeto_milionario.infrastructure.entity;
 
 
+import com.restaurante.projeto_milionario.Artifact.Disponibilidade;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,13 +19,17 @@ public class Mesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "id_mesa")
-    private int idMesa;
+    private Integer idMesa;
 
     @Column(name="mesa_disponivel")
-    private boolean mesaDisponivel;
+    @Enumerated(EnumType.STRING)
+    private Disponibilidade disponivel;
 
     @Column(name = "numero_mesa")
-    private int numeroMesa;
+    private Integer numeroMesa;
+
+    @Column(name="capacidade")
+    private Integer capacidade;
 
 
 }

@@ -10,12 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/produtos")
 @RequiredArgsConstructor
 public class ProdutoController {
     private final ProdutoService produtoService;
+    private final ProdutoRepository produtoRepository;
 
     @PostMapping
     public ResponseEntity<Produto> createProduto(@RequestBody Produto produto){
@@ -34,13 +36,44 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProduto( @RequestBody Produto produto,@PathVariable Integer id) {
+    public Produto atualizarProduto(Integer id, Produto produto) {
+        Optional<Produto> existenteOpt = produtoRepository.findById(id);
+        if (existenteOpt.isEmpty()) {
+            throw new RuntimeException("Produto não existe");
+        }
+        Produto existente = existenteOpt.get();
 
-        return ResponseEntity.ok(
-                produtoService.atualizarProduto(id,produto)
-        );
+        if (produto.getNomeProduto() != null && !produto.getNomeProduto().isBlank()) {
+            existente.setNomeProduto(produto.getNomeProduto());
+        }
+
+        if (produto.getDescricaoProduto() != null && !produto.getDescricaoProduto().isBlank()) {
+            existente.setDescricaoProduto(produto.getDescricaoProduto());
+        }
+
+        if (produto.getPrecoProduto() != null) {
+            existente.setPrecoProduto(produto.getPrecoProduto());
+        }
+
+        if (produto.getCategoria() != null) {
+            existente.setCategoria(produto.getCategoria());
+        }
+
+        if (produto.getQuantidadeProduto() != null) {
+            existente.setQuantidadeProduto(produto.getQuantidadeProduto());
+        }
+
+        // imagem: null = "não mexeu", "" (string vazia) = "remover", url = "trocar/adicionar"
+        if (produto.getImagemUrlProduto() != null) {
+            if (produto.getImagemUrlProduto().isBlank()) {
+                existente.setImagemUrlProduto(null); // remove a imagem explicitamente
+            } else {
+                existente.setImagemUrlProduto(produto.getImagemUrlProduto());
+            }
+        }
+
+        return produtoRepository.save(existente);
     }
-
     @GetMapping("/listar")
     public ResponseEntity<List<Produto>> listarProdutos() {
        return ResponseEntity.ok(produtoService.ListarProdutos());

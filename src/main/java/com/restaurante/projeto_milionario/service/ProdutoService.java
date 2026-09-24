@@ -38,7 +38,7 @@ public class ProdutoService {
         produtoRepository.delete(existente.get());
     }
 
-    public Produto atualizarProduto(Integer id,Produto produto){
+    public Produto atualizarProduto(Integer id, Produto produto){
         Optional<Produto> existente = produtoRepository.findById(id);
         if(existente.isEmpty()){
             throw new RuntimeException("Produto não existe");
@@ -48,8 +48,8 @@ public class ProdutoService {
         existente.get().setPrecoProduto(produto.getPrecoProduto());
         existente.get().setCategoria(produto.getCategoria());
         existente.get().setQuantidadeProduto(produto.getQuantidadeProduto());
+        existente.get().setImagemUrlProduto(produto.getImagemUrlProduto()); // adicionar essa linha
         return produtoRepository.save(existente.get());
-
     }
 
     public Produto BuscarProduto(Integer id) {
